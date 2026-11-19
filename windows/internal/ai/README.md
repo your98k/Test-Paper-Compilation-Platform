@@ -1,0 +1,11 @@
+# Direct AI provider
+
+`k12bank/internal/ai` uses Go 1.23 and the standard library. `Config.Validate()` checks nonblank settings without network I/O; the UI handles clearing settings separately. `Test` makes one potentially billable POST with a short probe and no bank data. A success means the selected URL, key, and model returned usable assistant text, not that question generation is guaranteed to work.
+
+- Enter an HTTPS origin (defaults to `/v1/chat/completions`), a base path such as `/v1`, or the full `/chat/completions` URL. Use simple path segments, without percent escapes, URL credentials, query strings, or fragments. Plain HTTP is accepted only for loopback IPs and `localhost` (dialed on loopback without DNS). HTTPS uses system trust. There is no proxy, redirect following, endpoint discovery, or automatic request retry.
+- Providers must support bearer auth, nonstreaming Chat Completions text, and `max_tokens`. Endpoints that only accept `max_completion_tokens`, other APIs or structured/multimodal content are not supported. Each POST has a 90-second ceiling, a 1 MiB response-body limit, and a 100 KiB assistant-content limit. The caller can use a shorter deadline or cancel the entire operation.
+- `Generate` sends filter metadata and up to five eligible caller-supplied exclusion stems plus five previously accepted stems from this run to the chosen provider. It never sends excluded answers, options, or analyses. Omit `exclude` if no existing stems should leave the device. All excluded questions still participate in local deduplication when supplied.
+- Progress callbacks are synchronous on the calling goroutine and count validated batches, not saved questions. An error or cancellation returns no partial result. The bank's fingerprint and a normalized stem check catch text duplicates, not paraphrases. Term `0` means the full school year. If no topic was selected, the module does not assign a curriculum topic ID.
+- The module checks structure, metadata, plain-text patterns, and answer format. It cannot verify that content is original, age-appropriate, on topic, or mathematically/factually correct. Mark results as AI-generated and review them before use. Render question fields as plain text, not trusted markup.
+
+Run `go test ./internal/ai` from `windows/`. Network tests use synthetic responses on loopback with a fake key.

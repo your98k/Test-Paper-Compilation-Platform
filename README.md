@@ -12,6 +12,7 @@
 - **两种出题方式**：本地模板随机生成，或用个人 API 生成 AI 原创新题；AI 题支持单题换新。
 - **练习与导出**：错题本、答案解析，支持打印 / PDF、Word 和复制文本。
 - **离线使用**：可添加到手机主屏幕；首次缓存完成后，本地出题可离线使用。
+- **Windows 原生桌面版**：无需网页或 CORS，桌面客户端直连 OpenAI 兼容接口。安装包与源码见 [Windows 版](https://github.com/your98k/Test-Paper-Compilation-Platform/releases/latest)；[发行历史](https://github.com/your98k/Test-Paper-Compilation-Platform/releases) 会随版本更新。
 
 ## 使用 AI 出题
 
