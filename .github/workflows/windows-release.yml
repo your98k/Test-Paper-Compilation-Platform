@@ -55,8 +55,8 @@ jobs:
           sudo apt-get install -y nsis
           sh windows/setup/package.sh dist/payload dist --x64
           git archive --format=zip --prefix=K12QuestionBank-Source/ HEAD > dist/K12QuestionBank-Source.zip
-          cp windows/README.md 'dist/安装与使用.md'
-          (cd dist && sha256sum K12QuestionBank-Setup.exe K12QuestionBank-Source.zip '安装与使用.md' > SHA256SUMS.txt)
+          cp windows/README.md 'dist/README-Windows.md'
+          (cd dist && sha256sum K12QuestionBank-Setup.exe K12QuestionBank-Source.zip 'README-Windows.md' > SHA256SUMS.txt)
       - uses: actions/upload-artifact@v4
         with:
           name: windows-x64-release
@@ -64,7 +64,7 @@ jobs:
           path: |
             dist/K12QuestionBank-Setup.exe
             dist/K12QuestionBank-Source.zip
-            dist/安装与使用.md
+            dist/README-Windows.md
             dist/SHA256SUMS.txt
             dist/payload/amd64/K12QuestionBank.exe
           if-no-files-found: error
@@ -119,5 +119,7 @@ jobs:
             --title "组卷台 Windows ${RELEASE_TAG#windows-v}" \
             --notes-file windows/CHANGELOG.md \
             dist/K12QuestionBank-Setup.exe dist/K12QuestionBank-Source.zip \
-            'dist/安装与使用.md' dist/SHA256SUMS.txt
+            'dist/README-Windows.md' dist/SHA256SUMS.txt
+          gh release download "$RELEASE_TAG" --dir release-verification
+          (cd release-verification && sha256sum -c SHA256SUMS.txt)
           gh release edit "$RELEASE_TAG" --draft=false --latest
