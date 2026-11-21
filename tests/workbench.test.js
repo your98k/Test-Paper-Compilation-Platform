@@ -266,6 +266,18 @@ test('changing grade while the selected term is empty auto-picks the sibling ter
   assert.match(h.$('#toasts').textContent, /已自动切换/);
 });
 
+test('选中方程或面积时，非算术题不再标成竖式计算', () => {
+  const h = workbench();
+  h.choose('#stageChips button', '小学');
+  h.$('#gradeButtons [data-grade="5"]').click();
+  h.state.kps = { equation: true, area: true };
+  h.state.sections = [{ type: 'vertical', count: 4, score: 4 }];
+  const bp = h.api.blueprint('topic-title');
+  assert.equal(Array.from(bp.kps).join(','), 'equation,area');
+  assert.match(bp.sections[0].title, /专项计算/);
+  assert.doesNotMatch(bp.sections[0].title, /竖式计算/);
+});
+
 test('empty curriculum copy never offers silent cross-grade fallback', () => {
   const h = workbench();
   h.choose('#subjectChips button', '英语');

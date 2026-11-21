@@ -1232,7 +1232,7 @@ function buildQuestion(kid, type, diff) {
     return finalize({ q: `${s.expr}`, a: `${fmt(s.ans)}（思路：${s.hint}）`, ws: type === 'vertical' ? 'l' : 'm' });
   }
 
-  if ((type === 'oral' || type === 'vertical') && !core(cat, diff, g)) {
+  if ((type === 'oral' || type === 'vertical') && cat !== 'area' && cat !== 'equation' && !core(cat, diff, g)) {
     const fb = conceptQ(cat, 'fill', diff) || conceptQ(cat, 'judge', diff);
     if (fb) return finalize(fb);
     const ic = core('intAddSub', diff, g);
@@ -1249,7 +1249,7 @@ function buildQuestion(kid, type, diff) {
         : judgeQ(`两个面积相等的三角形一定可以拼成一个平行四边形`, false, '形状不一定相同'));
     }
     if (type === 'choice') return finalize({ q: `计算三角形面积的公式是（　）<br>${optLines(['S ＝ ah', 'S ＝ ah ÷ 2', 'S ＝ (a＋b)h', 'S ＝ ab'])}`, a: `B（S ＝ ah ÷ 2）`, ws: 's' });
-    return finalize({ q: `${c.desc}。求它的面积。`, a: `${fmt(c.ans)} ${c.unit}`, ws: 'm' });
+    return finalize({ q: `${c.desc}。求它的面积。`, a: `${fmt(c.ans)} ${c.unit}`, ws: type === 'vertical' ? 'l' : 'm' });
   }
 
   if (cat === 'equation') {
@@ -1268,7 +1268,7 @@ function buildQuestion(kid, type, diff) {
       return finalize({ q: `下面各式中，是方程的是（　）<br>${optLines([`x ＋ ${R(2, 9)}`, `3 ＋ 4 ＝ 7`, `x − ${R(2, 9)} ＝ ${R(5, 20)}`, `6x`])}`, a: `C`, ws: 's' });
     }
     const e = eqCore(0);
-    return finalize({ q: e.eq, a: e.ans, ws: 's' });
+    return finalize({ q: e.eq, a: e.ans, ws: type === 'vertical' ? 'l' : 's' });
   }
 
   if (cat === 'mean') {

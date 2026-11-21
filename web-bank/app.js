@@ -690,13 +690,16 @@
     var term = state.term === 0 ? 1 : state.term;
     var title = (state.paper && state.paper.meta && state.paper.meta.titleEdited && state.paper.title)
       ? state.paper.title : autoTitle();
+    var selectedKps = chosenKps();
     return {
       subject: state.subject, stage: state.stage, grade: state.grade, term: term, version: 'rjb',
-      title: title, seed: seed, kps: chosenKps(),
+      title: title, seed: seed, kps: selectedKps,
       sections: state.sections.map(function (s, i) {
+        var specialVertical = s.type === 'vertical' && selectedKps.some(function (kp) { return kp === 'equation' || kp === 'area'; });
+        var sectionName = specialVertical ? '专项计算' : typeName(s.type);
         var sec = {
           type: s.type, count: s.count, score: s.score,
-          title: (A.CN[i] || (i + 1)) + '、' + typeName(s.type) + '（每题 ' + s.score + ' 分，共 ' + s.count + ' 题）'
+          title: (A.CN[i] || (i + 1)) + '、' + sectionName + '（每题 ' + s.score + ' 分，共 ' + s.count + ' 题）'
         };
         if (spec.diff) sec.diff = spec.diff.slice();
         else sec.diffMix = spec.diffMix.slice();
